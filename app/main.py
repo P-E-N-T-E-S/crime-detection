@@ -5,6 +5,8 @@ import mlflow
 import mlflow.sklearn
 import pandas as pd
 import numpy as np
+import json
+import os
 from typing import Dict
 
 app = FastAPI(
@@ -26,27 +28,41 @@ except Exception as e:
     # Fallback: carregar modelo local se MLflow não estiver disponível
     model = None
 
-# Mapeamento de bairros (ajustar conforme seus dados)
-NEIGHBORHOOD_MAPPING = {
-    "Boa Viagem": 0,
-    "Piedade": 1,
-    "Imbiribeira": 2,
-    "Jardim São Paulo": 3,
-    "Prado": 4,
-    # Adicione mais bairros conforme necessário
-}
+# Carregar mapeamento de bairros do arquivo JSON
+def load_neighborhood_mapping():
+    try:
+        json_path = os.path.join(os.path.dirname(__file__), 'neighborhood_mapping.json')
+        with open(json_path, 'r', encoding='utf-8') as f:
+            mapping = json.load(f)
+        print(f"✅ Mapeamento de bairros carregado: {len(mapping)} bairros")
+        return mapping
+    except FileNotFoundError:
+        print("⚠️ Arquivo neighborhood_mapping.json não encontrado. Execute o notebook primeiro!")
+        return {}
+    except Exception as e:
+        print(f"⚠️ Erro ao carregar mapeamento de bairros: {e}")
+        return {}
 
-# Mapeamento reverso de tipos de crime
-CRIME_TYPES = {
-    0: "Ataque a civis",
-    1: "Briga",
-    2: "Disparo Acidental",
-    3: "Disputa",
-    4: "Homicidio/Tentativa",
-    5: "Sequestro/Cárcere Privado",
-    6: "Tentativa/Roubo",
-    7: "Tiros a esmo"
-}
+# Carregar mapeamento de tipos de crime do arquivo JSON
+def load_crime_type_mapping():
+    try:
+        json_path = os.path.join(os.path.dirname(__file__), 'crime_type_mapping.json')
+        with open(json_path, 'r', encoding='utf-8') as f:
+            mapping = json.load(f)
+        # Inverter o mapeamento: código -> nome
+        inverted = {v: k for k, v in mapping.items()}
+        print(f"✅ Mapeamento de tipos de crime carregado: {len(inverted)} tipos")
+        return inverted
+    except FileNotFoundError:
+        print("⚠️ Arquivo crime_type_mapping.json não encontrado. Execute o notebook primeiro!")
+        return {}
+    except Exception as e:
+        print(f"⚠️ Erro ao carregar mapeamento de crimes: {e}")
+        return {}
+
+# Carregar mapeamentos
+NEIGHBORHOOD_MAPPING = load_neighborhood_mapping()
+CRIME_TYPES = load_crime_type_mapping()
 
 
 class PredictionRequest(BaseModel):
