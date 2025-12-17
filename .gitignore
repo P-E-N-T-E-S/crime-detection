@@ -1,10 +1,6 @@
 # Datasets
 *.csv
 
-# MLflow
-mlruns/
-mlartifacts/
-
 # Python
 __pycache__/
 *.py[cod]
