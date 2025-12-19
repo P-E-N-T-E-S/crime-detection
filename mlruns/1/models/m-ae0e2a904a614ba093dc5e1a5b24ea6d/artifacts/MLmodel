@@ -1,0 +1,22 @@
+artifact_path: /Users/evaldocunhafilho/Documents/Data_Science/Crime-detection/mlruns/1/models/m-ae0e2a904a614ba093dc5e1a5b24ea6d/artifacts
+flavors:
+  python_function:
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.sklearn
+    model_path: model.pkl
+    predict_fn: predict
+    python_version: 3.12.11
+  sklearn:
+    code: null
+    pickled_model: model.pkl
+    serialization_format: cloudpickle
+    sklearn_version: 1.7.2
+mlflow_version: 3.7.0
+model_id: m-ae0e2a904a614ba093dc5e1a5b24ea6d
+model_size_bytes: 5827
+model_uuid: m-ae0e2a904a614ba093dc5e1a5b24ea6d
+prompts: null
+run_id: 1b06b6908ae7472aa041d0ffaf41e9de
+utc_time_created: '2025-12-19 18:08:20.364873'

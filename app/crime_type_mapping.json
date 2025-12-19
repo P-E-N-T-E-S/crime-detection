@@ -1,10 +1,6 @@
 {
   "Ataque a civis": 0,
   "Briga": 1,
-  "Disparo Acidental": 2,
-  "Disputa": 3,
-  "Homicidio/Tentativa": 4,
-  "Sequestro/Cárcere Privado": 5,
-  "Tentativa/Roubo": 6,
-  "Tiros a esmo": 7
+  "Homicidio/Tentativa": 2,
+  "Tentativa/Roubo": 3
 }

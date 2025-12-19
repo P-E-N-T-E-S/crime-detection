@@ -182,7 +182,7 @@ def predict_crime_type(data: str, bairro: str):
             )
         
         # Preparar features
-        features = preparar_features(data, bairro)
+        features = preparar_features(data, bairro.upper())
         
         # Fazer previsão
         predicao = model.predict(features)[0]
