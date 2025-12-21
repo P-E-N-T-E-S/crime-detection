@@ -149,3 +149,32 @@ app/
 - Certifique-se de ter executado o treinamento dos modelos no notebook antes de usar a API
 - Os modelos devem estar registrados no MLflow
 - Ajuste os mapeamentos de bairros e crimes conforme seus dados
+
+# Ajustes finais para a final de P6
+## Melhorias do modelo
+Dados que o modelo não foi apresentado para avaliação do SR2, discorreremos nesse documento sobre problemas encontrados desde o processo de pesquisa, treinamento e avaliação de suas métricas
+### Coleta dos dados
+Desde a fase de pesquisa houve uma complicação para encontrar uma fonte de dados que pudessem ser utilizados como base de treino, teste e validação. Foi identificada uma fonte de dados que eram disponibilizados via API da instituição Fogo Cruzado, que armazena e realiza a distribuição de diversos tipos de ocorrências registradas em sua data-base. Após a identificação da fonte, a coleta dos dados foi realizada via script Python que está disponível no repositório seguindo o caminho mlflow/main.py.
+## Tratamento dos dados
+Na fase de exploração e análise inicial dos dados foi perceptível alguns problemas de estruturação que seriam dores futuras, nas colunas contextInfo e victims existem dados armazenados com a estruturação de arquivos .json, como resolução foi realizado o parse de dados dados armazenados nestas determinadas colunas. 
+
+Com o conhecimento construído da etapa anterior foi possível se observar que em nossa variável alvo, tipo de crime (obtida através dos jsons contidos em contextInfo), existia um grande desbalanceamento em relação a quantidade, com uma classe tendo mais de 10000 repetições, números muito superiores às demais, para isso foi executado um rebalanceamento dessa classe, reduzindo a apenas 10% de seus dados, para que se equipare a outras classes, levando a um modelo mais sensível e com melhores métricas
+Análise de dados
+Como objetivo de análise foi decidido a verificação de tipo de crime por bairro e data. Com base nisso foi possível concluir que tentativa/homicídio foi o mais predominante, com exceção de Boa Viagem.
+### Preparação para o modelo
+Como já definido anteriormente o modelo preditivo tomaria como base as métricas de bairro e data para retornar o tipo de crime mais provável de se acontecer, então, para o treinamento do mesmo, realizamos a normalização das variáveis necessárias, utilizando o label encoder e ajustando as datas.
+Em seguida, a base de dados foi dividida em conjuntos de treinamento e teste, adotando-se a proporção de 70% para treino e 30% para teste, permitindo a avaliação adequada do desempenho do modelo em dados não vistos.
+### Treinamento do modelo
+Para a seleção do modelo com melhor desempenho, realizamos a comparação entre: Random Forest, Gradient Boosting, Logistic Regression, KNN e Decision Tree, utilizamos algoritmo Grid Search para otimização dos hiperparâmetros. 
+
+
+O modelo de melhor desempenho foi Random Forest
+
+Por fim, todos os modelos com seus hiperparâmetros foram armazenados no MLflow para comparações futuras
+API
+Para a ingestão/predição dados, foi criado uma API que recebe bairro e data e retorna o tipo de crime com maior probabilidade de ocorrência, em próximas etapas é visado a integração com um dashboard com mapas que seria disponibilizado para a força policial, de modo a tentar se organizar para obter uma melhor área de cobertura, com uma força tarefa coerente com o tipo de ocorrência predito pelo modelo. A API foi criada utilizando a tecnologia Fast API e consome o modelo diretamente do MLflow.
+
+### Conclusão
+
+Infelizmente, após a conclusão das etapas de treinamento e avaliação, ao se observar as métricas de desempenho, chegamos a conclusão de que o tópico trabalhado possuía variáveis latentes, que não estão representadas no conjunto de dados utilizados. Fatores socioeconômicos e comportamentais que podem impactar diretamente a dinâmica criminal, não puderam ser capturados e expressos apenas partindo das variáveis de bairro e data, dificultando a análise de padrões consistentes pelo modelo, comprometendo seu desempenho preditivo.
+
